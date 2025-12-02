@@ -375,4 +375,49 @@
     });
   </script>
 </body>
-              </html>
+              </html><!-- Fire sparks: paste inside <body> -->
+<canvas id="fireCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
+<script>
+(() => {
+  const c = document.getElementById('fireCanvas');
+  const ctx = c.getContext('2d');
+  const DPR = Math.min(window.devicePixelRatio||1, 2);
+  function resize(){ c.width = innerWidth * DPR; c.height = innerHeight * DPR; c.style.width = innerWidth+'px'; c.style.height = innerHeight+'px'; ctx.setTransform(DPR,0,0,DPR,0,0); }
+  addEventListener('resize', resize); resize();
+
+  const PARTICLE_COUNT = window.innerWidth > 720 ? 120 : 40;
+  const particles = [];
+  function rnd(a,b){return a + Math.random()*(b-a);}
+  for(let i=0;i<PARTICLE_COUNT;i++){
+    particles.push({
+      x: rnd(0, innerWidth),
+      y: rnd(innerHeight*0.6, innerHeight),
+      vx: rnd(-0.2,0.6),
+      vy: rnd(-1.2,-3.2),
+      life: rnd(40,120),
+      age: Math.random()*120,
+      size: rnd(1,5),
+      hue: rnd(20,48)
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    ctx.globalCompositeOperation = 'lighter';
+    particles.forEach(p=>{
+      p.age += 1;
+      if(p.age > p.life){ p.age=0; p.x = rnd(0,innerWidth); p.y = rnd(innerHeight*0.8, innerHeight); p.vx=rnd(-0.5,0.8); p.vy=rnd(-1.6,-3.2); p.life=rnd(40,120); p.size=rnd(1,5); p.hue=rnd(20,48); }
+      p.x += p.vx; p.y += p.vy;
+      ctx.beginPath();
+      const alpha = Math.max(0, 1 - p.age / p.life);
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size*8);
+      grad.addColorStop(0, `hsla(${p.hue},100%,60%,${alpha})`);
+      grad.addColorStop(0.4, `hsla(${p.hue+10},100%,45%,${alpha*0.25})`);
+      grad.addColorStop(1, `rgba(0,0,0,0)`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(p.x - p.size*8, p.y - p.size*8, p.size*16, p.size*16);
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
