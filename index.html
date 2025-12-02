@@ -1,0 +1,378 @@
+<!-- Save as index.html and push to GitHub (single-file static site) -->
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KLASH — Link Bio</title>
+
+  <!-- Premium fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#0f1724;
+      --bg2:#071029;
+      --accent:#ffd166;
+      --muted:#aab3c0;
+      --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.03);
+      --card: rgba(255,255,255,0.02);
+    }
+
+    /* Reset & base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:#f6f7fb;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.35;
+      overflow-x:hidden;
+    }
+
+    /* full-screen animated background text (vertical marquee, subtle) */
+    .bg-words{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:0.06;
+    }
+    .bg-words .col{
+      display:flex;
+      flex-direction:column;
+      gap:28px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:6px;
+      transform:rotate(-10deg);
+      font-size:96px;
+      line-height:0.9;
+    }
+    @keyframes slideY {
+      0%{transform:translateY(0)}
+      50%{transform:translateY(-45%)}
+      100%{transform:translateY(0)}
+    }
+    .bg-words .col{ animation: slideY 18s linear infinite; }
+
+    /* container */
+    .wrap{
+      position:relative;
+      z-index:2;
+      max-width:920px;
+      margin:40px auto;
+      padding:36px;
+    }
+
+    .card{
+      backdrop-filter: blur(8px) saturate(1.1);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);
+      border-radius:18px;
+      padding:28px;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+    }
+
+    /* Top heading area */
+    .intro{
+      display:flex;
+      align-items:center;
+      gap:22px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      flex:1 1 260px;
+    }
+    .small-note{
+      font-size:13px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:1.6px;
+      margin-bottom:8px;
+    }
+    .name{
+      font-family:"Playfair Display", serif;
+      font-weight:900;
+      font-size:72px;
+      margin:0;
+      letter-spacing:2px;
+      line-height:0.9;
+      color:linear-gradient(90deg,#fff,#ffd166);
+      -webkit-text-fill-color:transparent;
+      -webkit-background-clip:text;
+    }
+    .tagline{
+      color:var(--muted);
+      margin-top:6px;
+      font-size:15px;
+    }
+
+    /* profile photo circle */
+    .avatar-wrap{
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      border:6px solid rgba(255,255,255,0.06);
+      background: radial-gradient(120% 120% at 10% 10%, rgba(255,209,102,0.06), transparent 20%);
+      transition:transform .45s ease;
+      flex-shrink:0;
+    }
+    .avatar-wrap img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .avatar-wrap:hover{ transform:translateY(-8px) rotate(-2deg) scale(1.03); }
+
+    /* My works section */
+    .section{
+      margin-top:28px;
+    }
+    .section h3{
+      font-size:20px;
+      margin:4px 0 18px 0;
+      letter-spacing:0.6px;
+    }
+    .works-grid{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .work-item{
+      min-width:120px;
+      width:120px;
+      height:120px;
+      border-radius:50%;
+      background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:12px;
+      font-weight:600;
+      font-size:13px;
+      color:#fff;
+      box-shadow:0 8px 20px rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+      transition:transform .35s ease, box-shadow .35s ease;
+    }
+    .work-item:hover{ transform:translateY(-8px); box-shadow:0 22px 40px rgba(2,6,23,0.75); }
+
+    /* Movie gallery */
+    .movies{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:14px;
+      margin-top:16px;
+    }
+    .movie-card{
+      border-radius:12px;
+      overflow:hidden;
+      background:var(--card);
+      border:1px solid rgba(255,255,255,0.03);
+      transform:translateY(16px);
+      opacity:0;
+      transition:all .6s cubic-bezier(.2,.9,.2,1);
+    }
+    .movie-card.visible{ transform:none; opacity:1; }
+    .movie-card img{ width:100%; height:220px; object-fit:cover; display:block; }
+    .movie-card .mtitle{ padding:10px 12px; font-weight:700; font-size:15px; color:#fff; }
+
+    /* ending */
+    .ending{
+      margin-top:20px;
+      font-weight:700;
+      font-size:18px;
+      color:var(--muted);
+      letter-spacing:0.6px;
+    }
+
+    /* scroll hint */
+    .scroll-hint{
+      display:inline-block;
+      margin-top:8px;
+      color:var(--muted);
+      font-size:13px;
+      opacity:0.9;
+    }
+
+    /* small responsive tweaks */
+    @media (max-width:720px){
+      .name{ font-size:46px; }
+      .avatar-wrap{ width:120px; height:120px; }
+      .work-item{ width:100px; height:100px; font-size:12px; min-width:100px; }
+      .bg-words .col{ font-size:44px; letter-spacing:4px; transform:rotate(-12deg) translateX(-12px); }
+    }
+
+    /* nice gradient glow under name */
+    .name::after{
+      content:"";
+      display:block;
+      height:8px;
+      width:160px;
+      margin-top:14px;
+      border-radius:8px;
+      background: linear-gradient(90deg, rgba(255,209,102,0.25), rgba(255,110,143,0.16));
+      filter: blur(12px);
+    }
+
+    /* helper for reveal animations */
+    .reveal{
+      opacity:0;
+      transform:translateY(16px);
+      transition: all .7s cubic-bezier(.2,.9,.2,1);
+    }
+    .reveal.visible{ opacity:1; transform:none; }
+
+    /* subtle floating accent shapes */
+    .accents{
+      position:fixed;
+      right:-60px;
+      top:20%;
+      width:260px;
+      height:260px;
+      z-index:1;
+      pointer-events:none;
+      opacity:0.06;
+      transform:rotate(12deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated background large words (replace with any words you like) -->
+  <div class="bg-words" aria-hidden="true">
+    <div class="col">
+      <div>meta</div>
+      <div>ad</div>
+      <div>expert</div>
+      <div>coder</div>
+      <div>editor</div>
+      <div>producer</div>
+      <div>crypto</div>
+      <div>ai</div>
+    </div>
+  </div>
+
+  <!-- decorative accents (purely visual) -->
+  <svg class="accents" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="g" cx="30%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#ffd166"/>
+        <stop offset="100%" stop-color="#ff6e8f"/>
+      </radialGradient>
+    </defs>
+    <circle cx="40" cy="40" r="80" fill="url(#g)" />
+  </svg>
+
+  <main class="wrap">
+    <div class="card">
+      <div class="intro">
+        <div class="brand">
+          <div class="small-note">No introduction needed — but still giving you a little glimpse</div>
+          <h1 class="name">KLASH</h1>
+          <div class="tagline">Meta Ad Expert · Chota Mota Coder & Developer · Editor · Music Producer · Crypto Buyer & Seller · AI Expert</div>
+          <div class="scroll-hint">Scroll down for works & favourites ↓</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;flex-shrink:0">
+          <!-- Replace src with your circular profile photo -->
+          <div class="avatar-wrap" title="KLASH profile">
+            <img src="https://via.placeholder.com/400x400.png?text=Your+Photo" alt="Klash profile photo">
+          </div>
+          <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Premium</div>
+        </div>
+      </div>
+
+      <!-- My Works -->
+      <section class="section reveal" id="works">
+        <h3>My works</h3>
+        <div class="works-grid" aria-hidden="false">
+          <div class="work-item">Meta Ad<br>Expert</div>
+          <div class="work-item">Chota Mota<br>Coder &<br>Developer</div>
+          <div class="work-item">Editor</div>
+          <div class="work-item">Music<br>Producer</div>
+          <div class="work-item">Crypto<br>Buyer/Seller</div>
+          <div class="work-item">AI<br>Expert</div>
+          <div class="work-item">Aur bhi<br>bahut kuch…</div>
+        </div>
+      </section>
+
+      <!-- Favorite movies -->
+      <section class="section reveal" id="movies">
+        <h3>Favorite movies</h3>
+        <div class="movies">
+          <!-- Replace img src with real poster links -->
+          <div class="movie-card" data-title="96">
+            <img src="https://via.placeholder.com/600x800.png?text=96+poster" alt="96 movie poster">
+            <div class="mtitle">96</div>
+          </div>
+
+          <div class="movie-card" data-title="Charlie">
+            <img src="https://via.placeholder.com/600x800.png?text=Charlie+poster" alt="Charlie movie poster">
+            <div class="mtitle">Charlie</div>
+          </div>
+
+          <div class="movie-card" data-title="Salaar">
+            <img src="https://via.placeholder.com/600x800.png?text=Salaar+poster" alt="Salaar movie poster">
+            <div class="mtitle">Salaar</div>
+          </div>
+
+          <div class="movie-card" data-title="Vikram">
+            <img src="https://via.placeholder.com/600x800.png?text=Vikram+poster" alt="Vikram movie poster">
+            <div class="mtitle">Vikram</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ending line -->
+      <div class="ending reveal" id="ending">
+        BC aur kya jaanega?
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Replace or extend words in background if needed:
+    // document.querySelector('.bg-words .col').innerHTML = '<div>meta</div><div>ad</div>...';
+
+    // IntersectionObserver for reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+        }
+      });
+    }, {threshold:0.18});
+
+    document.querySelectorAll('.reveal, .movie-card').forEach(el => io.observe(el));
+
+    // Slight parallax tilt for avatar on mouse move (desktop)
+    const avatar = document.querySelector('.avatar-wrap');
+    if(avatar){
+      avatar.addEventListener('mousemove', (ev)=>{
+        const r = avatar.getBoundingClientRect();
+        const x = (ev.clientX - r.left) / r.width - 0.5;
+        const y = (ev.clientY - r.top) / r.height - 0.5;
+        avatar.style.transform = `perspective(600px) rotateX(${ -y * 6 }deg) rotateY(${ x * 6 }deg) translateZ(6px)`;
+      });
+      avatar.addEventListener('mouseleave', ()=> avatar.style.transform = '');
+    }
+
+    // Optional: keyboard quick-jump (K -> scroll to works)
+    window.addEventListener('keydown', e=>{
+      if(e.key.toLowerCase() === 'k'){
+        document.getElementById('works').scrollIntoView({behavior:'smooth'});
+      }
+    });
+  </script>
+</body>
+              </html>
