@@ -1,258 +1,184 @@
-<!-- Save as index.html (replace existing). Uses profile.jpg in repo root -->
+<!-- Save as index.html (super-premium neon red/blue version) -->
 <!doctype html>
 <html lang="hi">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>KLASH — Bio (Premium)</title>
+  <title>KLASH — Bio</title>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&family=Playfair+Display:wght@700;900&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&family=Playfair+Display:wght@800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg-dark-1:#040612;
-      --bg-dark-2:#071029;
-      --muted:#b9c2d0;
-      --glass: rgba(255,255,255,0.03);
-      --red:#ff4d4d;
-      --blue:#00e6ff;
+      --bg1:#020617;
+      --bg2:#040b26;
+      --neon-red:#ff2e63;
+      --neon-blue:#20e3ff;
       --gold:#ffd166;
-      --card-radius:20px;
+      --muted:#b4bed7;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    *{box-sizing:border-box;}
     body{
       margin:0;
-      font-family:"Poppins",system-ui,Arial;
-      background: linear-gradient(180deg,var(--bg-dark-1),var(--bg-dark-2));
+      background: radial-gradient(circle at 20% 20%, rgba(255,0,80,0.25), transparent 40%),
+                  radial-gradient(circle at 80% 80%, rgba(0,200,255,0.25), transparent 40%),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      font-family:"Poppins", sans-serif;
       color:#fff;
-      -webkit-font-smoothing:antialiased;
+      padding:28px 0;
       display:flex;
-      align-items:flex-start;
       justify-content:center;
-      padding:28px;
-      overflow-y:auto;
     }
-
-    /* background layers */
-    .bg-wrap{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-    .animated-gradient{
-      position:absolute; inset:-20% -30%; filter:blur(84px) saturate(1.05); opacity:0.56;
-      background: conic-gradient(from 160deg at 50% 50%, rgba(0,0,0,0.4), rgba(7,16,34,0.6) 35%, rgba(10,18,30,0.85));
-      animation:rotateGrad 32s linear infinite;
+    .wrap{
+      width:100%;
+      max-width:820px;
+      padding:0 16px;
     }
-    @keyframes rotateGrad{ to{ transform:rotate(360deg) } }
-
-    .bg-words{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0.035; font-weight:900; z-index:0; color:#fff }
-    .bg-words .col{ font-size:120px; letter-spacing:10px; transform:rotate(-10deg); mix-blend-mode:overlay; }
-    @media (max-width:720px){ .bg-words .col{ font-size:56px; } }
-
-    #particleCanvas{ position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0.12; }
-
-    /* main */
-    .wrap{ position:relative; z-index:2; width:100%; max-width:820px; margin:10px auto 80px auto; padding:0 8px; }
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.008));
-      border-radius:var(--card-radius);
-      border:1px solid rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.05);
       padding:28px;
-      box-shadow:0 12px 50px rgba(2,6,23,0.6);
-      backdrop-filter: blur(10px) saturate(1.05);
-      overflow:hidden;
+      border-radius:22px;
+      backdrop-filter: blur(14px) saturate(1.4);
+      box-shadow:0 0 90px rgba(255,0,80,0.18), 0 0 90px rgba(0,180,255,0.15);
     }
-
-    .note{ color:var(--muted); font-size:14px; letter-spacing:0.6px; margin-bottom:14px; text-transform:capitalize; }
-
-    .center{ display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom:12px; }
+    .note{
+      text-align:center;
+      color:var(--muted);
+      font-size:15px;
+      margin-bottom:20px;
+    }
 
     /* avatar */
     .avatar{
-      width:160px; height:160px; border-radius:50%; overflow:hidden; display:grid; place-items:center;
-      border:6px solid rgba(255,255,255,0.05);
-      background: radial-gradient(circle at 20% 20%, rgba(255,209,102,0.04), transparent 20%);
-      box-shadow: 0 18px 48px rgba(0,0,0,0.6);
-      transition: transform .35s ease;
+      width:150px; height:150px;
+      margin:0 auto;
+      border-radius:50%;
+      overflow:hidden;
+      border:4px solid rgba(255,255,255,0.08);
+      box-shadow:
+        0 0 22px rgba(255,0,80,0.45),
+        0 0 22px rgba(0,200,255,0.45);
     }
-    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .avatar:hover{ transform:translateY(-8px) rotate(-2deg) scale(1.02); }
+    .avatar img{
+      width:100%; height:100%; object-fit:cover;
+    }
 
-    /* KLASH glitch refined */
+    /* glitch KLASH */
     .glitch{
       font-family:"Playfair Display", serif;
-      font-size:56px; font-weight:900; position:relative; line-height:0.9; letter-spacing:1px; display:inline-block; color:#fff;
+      font-size:52px;
+      font-weight:900;
+      position:relative;
       text-transform:uppercase;
-      filter: drop-shadow(0 8px 22px rgba(0,0,0,0.65));
+      margin-top:18px;
+      text-align:center;
     }
-    .glitch::before, .glitch::after{
+    .glitch:before,.glitch:after{
       content:attr(data-text);
-      position:absolute; left:0; top:0; width:100%; pointer-events:none; opacity:0.98;
+      position:absolute;
+      inset:0;
       mix-blend-mode:screen;
     }
-    .glitch::before{
-      left:2px; text-shadow:-8px 0 rgba(255,77,77,0.95); animation:gl1 2.2s infinite linear;
+    .glitch:before{
+      color:var(--neon-red);
+      animation:gl1 2s infinite linear;
     }
-    .glitch::after{
-      left:-2px; text-shadow:-8px 0 rgba(0,230,255,0.95); animation:gl2 2.9s infinite linear;
+    .glitch:after{
+      color:var(--neon-blue);
+      animation:gl2 3s infinite linear;
     }
+
     @keyframes gl1{
-      0%{clip-path:inset(0 0 0 0)} 8%{clip-path:inset(0 0 38% 0); transform:translate(-3px,-2px)} 18%{clip-path:inset(28% 0 6% 0); transform:translate(6px,3px)} 30%{clip-path:inset(0 0 0 0)} 100%{clip-path:inset(0 0 0 0)}
+      0%{transform:translate(0)} 
+      10%{transform:translate(-2px,-2px)}
+      20%{transform:translate(2px,1px)}
+      100%{transform:translate(0)}
     }
+
     @keyframes gl2{
-      0%{clip-path:inset(0 0 0 0)} 12%{clip-path:inset(40% 0 16% 0); transform:translate(4px,3px)} 45%{clip-path:inset(0 0 0 0)} 100%{clip-path:inset(0 0 0 0)}
+      0%{transform:translate(0)}
+      15%{transform:translate(2px,2px)}
+      30%{transform:translate(-2px,-1px)}
+      100%{transform:translate(0)}
     }
 
-    .subtext{ color:var(--muted); font-size:15px; margin-top:6px; text-align:center; letter-spacing:0.3px; }
+    .subtitle{
+      text-align:center;
+      margin-top:4px;
+      font-size:17px;
+      color:#d8dffd;
+      font-weight:500;
+    }
 
-    /* works */
-    .works{ margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; }
+    /* work cards */
+    .works{
+      margin-top:26px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:18px;
+    }
     .work{
-      min-height:108px; border-radius:999px; display:flex; align-items:center; justify-content:center; text-align:center; padding:18px 22px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.013), rgba(255,255,255,0.008));
-      border:1px solid rgba(255,255,255,0.03);
-      color:#fff; font-weight:700; font-size:16px;
-      position:relative; overflow:visible; transition: transform .36s cubic-bezier(.2,.9,.2,1), box-shadow .36s ease;
-    }
-
-    /* unified premium glow: animated red-blue sheen under each work */
-    .work::before{
-      content:""; position:absolute; inset:0; margin:6px; border-radius:999px; z-index:-1;
-      background: linear-gradient(90deg, rgba(255,77,77,0.18) 0%, rgba(255,209,102,0.09) 45%, rgba(0,230,255,0.16) 100%);
-      filter: blur(28px) saturate(1.08);
-      opacity:0; transform:scale(.98);
-      transition: opacity .36s ease, transform .36s ease;
-      background-size:200% 100%;
-      animation:slideHue 6s linear infinite;
-    }
-    .work:hover{ transform:translateY(-10px) scale(1.01); box-shadow:0 28px 66px rgba(3,8,25,0.75); }
-    .work:hover::before{ opacity:0.96; transform:scale(1.02); }
-
-    @keyframes slideHue{
-      0%{ background-position:0% 50% } 50%{ background-position:100% 50% } 100%{ background-position:0% 50% }
-    }
-
-    /* highlight word style */
-    .work .label{
-      font-family:"Montserrat", "Poppins", sans-serif;
-      font-weight:800;
-      display:inline-block;
-      letter-spacing:0.2px;
+      background: rgba(255,255,255,0.03);
+      border-radius:999px;
+      padding:20px;
+      text-align:center;
       font-size:18px;
-      background: linear-gradient(90deg,var(--red),var(--gold),var(--blue));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      font-weight:600;
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow:
+        0 0 35px rgba(255,0,80,0.18),
+        0 0 35px rgba(0,180,255,0.18);
+      transition:0.35s ease;
+    }
+    .work:hover{
+      transform: translateY(-8px) scale(1.02);
+      box-shadow:
+        0 0 60px rgba(255,0,80,0.35),
+        0 0 60px rgba(0,180,255,0.35);
     }
 
-    /* subtle inner glossy top strip */
-    .work::after{
-      content:""; position:absolute; left:8px; right:8px; top:8px; height:8px; border-radius:999px; background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00)); pointer-events:none;
+    .txt{
+      background: linear-gradient(90deg,var(--neon-red),var(--gold),var(--neon-blue));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      font-weight:800;
+      font-size:20px;
     }
-
-    @media (max-width:540px){
-      .glitch{ font-size:40px; }
-      .avatar{ width:120px; height:120px; }
-      .work{ min-height:88px; font-size:15px; padding:14px; }
-      .works{ grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }
-    }
-
-    .ending{ margin-top:18px; color:var(--muted); text-align:center; font-weight:700; font-size:15px; line-height:1.4; }
-
-    /* bottom fade frame */
-    .card::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:80px; border-radius:0 0 var(--card-radius) var(--card-radius); background: linear-gradient(180deg, rgba(7,16,34,0) 0%, rgba(2,6,23,0.48) 100%); pointer-events:none; }
   </style>
 </head>
+
 <body>
-
-  <div class="bg-wrap" aria-hidden="true">
-    <div class="animated-gradient"></div>
-    <canvas id="particleCanvas"></canvas>
-    <div class="bg-words"><div class="col">EXPERT &nbsp;&nbsp; CREATOR &nbsp;&nbsp; PRODUCER</div></div>
-  </div>
-
-  <main class="wrap">
+  <div class="wrap">
     <div class="card">
-      <div class="note">Waise to no introduction needed Fir bhi bata rha hu</div>
+      <div class="note">Waise To No Introduction Needed Fir Bhi Bata Rha Hu</div>
 
-      <div class="center">
-        <div class="avatar" id="avatar">
-          <img src="profile.jpg" alt="Klash profile">
-        </div>
-
-        <div style="text-align:center;">
-          <div class="glitch" data-text="KLASH">KLASH</div>
-          <div class="subtext">My works</div>
-        </div>
+      <div class="avatar">
+        <img src="profile.jpg">
       </div>
+
+      <div class="glitch" data-text="KLASH">KLASH</div>
+      <div class="subtitle">My works</div>
 
       <div class="works">
-        <div class="work"><span class="label">Meta Ad</span><br><span style="font-weight:700;color:rgba(255,255,255,0.92)">Expert</span></div>
-        <div class="work"><span class="label">AI</span><br><span style="font-weight:700;color:rgba(255,255,255,0.92)">Expert</span></div>
-        <div class="work"><span class="label">Crypto</span><br><span style="font-weight:700;color:rgba(255,255,255,0.92)">Buyer / Seller</span></div>
-        <div class="work"><span class="label">Editor</span></div>
-        <div class="work"><span class="label">Music</span><br><span style="font-weight:700;color:rgba(255,255,255,0.92)">Producer</span></div>
-        <div class="work"><span class="label">Chota Mota</span><br><span style="font-weight:700;color:rgba(255,255,255,0.92)">Coder & Developer</span></div>
-        <div class="work"><span class="label">Aur bhi</span><br><span style="font-weight:700;color:rgba(255,255,255,0.92)">bahut kuch…</span></div>
+
+        <div class="work"><span class="txt">Meta Ad</span><br>Expert</div>
+
+        <div class="work"><span class="txt">AI</span><br>Expert</div>
+
+        <div class="work"><span class="txt">Crypto</span><br>Buyer / Seller</div>
+
+        <div class="work"><span class="txt">Editor</span></div>
+
+        <div class="work"><span class="txt">Music</span><br>Producer</div>
+
+        <div class="work"><span class="txt">Chota Mota</span><br>Coder & Developer</div>
+
+        <div class="work"><span class="txt">Aur bhi</span><br>bahut kuch…</div>
+
       </div>
 
-      <div class="ending">Or bhi bahut kuch hai jo yaha bata nahi sakta — aao kabhi DM me</div>
     </div>
-  </main>
-
-  <script>
-    /* particles - subtle */
-    (function(){
-      const canvas = document.getElementById('particleCanvas');
-      if(!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const DPR = Math.min(window.devicePixelRatio || 1, 2);
-      function resize(){ canvas.width = innerWidth * DPR; canvas.height = innerHeight * DPR; canvas.style.width = innerWidth + 'px'; canvas.style.height = innerHeight + 'px'; ctx.setTransform(DPR,0,0,DPR,0,0); }
-      addEventListener('resize', resize); resize();
-
-      const N = Math.round((innerWidth*innerHeight)/90000);
-      const pts = [];
-      function rnd(a,b){return a + Math.random()*(b-a);}
-      for(let i=0;i<N;i++){
-        pts.push({ x: rnd(0,innerWidth), y: rnd(0,innerHeight), r: rnd(0.5,1.8), vx: rnd(-0.06,0.06), vy: rnd(-0.02,0.02), alpha: rnd(0.04,0.16) });
-      }
-
-      function draw(){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.globalCompositeOperation = 'source-over';
-        pts.forEach(p=>{
-          p.x += p.vx; p.y += p.vy;
-          if(p.x < -20) p.x = innerWidth + 20;
-          if(p.x > innerWidth + 20) p.x = -20;
-          if(p.y < -20) p.y = innerHeight + 20;
-          if(p.y > innerHeight + 20) p.y = -20;
-          ctx.beginPath();
-          ctx.fillStyle = 'rgba(255,255,255,'+p.alpha+')';
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-          ctx.fill();
-        });
-        requestAnimationFrame(draw);
-      }
-      draw();
-    })();
-
-    /* avatar micro-parallax */
-    (function(){
-      const av = document.getElementById('avatar');
-      if(!av) return;
-      av.addEventListener('mousemove', e=>{
-        const r = av.getBoundingClientRect();
-        const x = (e.clientX - r.left)/r.width - 0.5;
-        const y = (e.clientY - r.top)/r.height - 0.5;
-        av.style.transform = `translate3d(${x*8}px,${y*-8}px,0) rotate(${x*-3}deg)`;
-      });
-      av.addEventListener('mouseleave', ()=> av.style.transform = '');
-    })();
-
-    /* reduce visuals on small screens */
-    (function(){
-      const mq = window.matchMedia('(max-width:480px)');
-      if(mq.matches){
-        document.getElementById('particleCanvas').style.opacity = '0.06';
-      }
-    })();
-  </script>
+  </div>
 </body>
 </html>
