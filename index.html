@@ -1,9 +1,9 @@
-<!-- Save as index.html -->
+<!-- Save this as index.html (replace existing). Uses profile.jpg in repo root. -->
 <!doctype html>
 <html lang="hi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>KLASH — Bio</title>
 
   <!-- Fonts -->
@@ -11,249 +11,209 @@
 
   <style>
     :root{
-      --bg:#06060a;
-      --card: rgba(255,255,255,0.03);
-      --muted: #bfc8d3;
-      --accent1: #ff4d4d;
-      --accent2: #ffd166;
-      --accent3: #00f0ff;
+      --bg1:#040612;
+      --bg2:#071029;
+      --glass: rgba(255,255,255,0.03);
+      --muted:#b9c2d0;
+      --accent1:#ff4d4d;
+      --accent2:#ffd166;
+      --accent3:#00f0ff;
+      --card-radius:18px;
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
-      margin:0; min-height:100vh; font-family:"Poppins",system-ui,Arial;
-      background:linear-gradient(180deg,#03040a 0%, #071029 100%);
-      color:#fff; -webkit-font-smoothing:antialiased;
-      display:flex; align-items:flex-start; justify-content:center; padding:28px;
+      margin:0;
+      font-family:"Poppins",system-ui,Arial;
+      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:28px;
+      overflow-y:auto;
     }
-    .container{
+
+    /* animated gradient background + subtle particles */
+    .bg-wrap{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+    .animated-gradient{
+      position:absolute; inset:-20% -30%; filter:blur(80px) saturate(1.1); opacity:0.55;
+      background: conic-gradient(from 200deg at 50% 50%, #0b1220 0%, #0b1220 10%, #0f1724 30%, #12263a 40%, #0b1220 60%, #071029 100%);
+      animation:rotateGrad 28s linear infinite;
+    }
+    @keyframes rotateGrad{ to{ transform:rotate(360deg) } }
+
+    .bg-words{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0.04; font-weight:900; z-index:0;
+    }
+    .bg-words .col{ font-size:120px; letter-spacing:8px; transform:rotate(-10deg); }
+    @media (max-width:720px){ .bg-words .col{ font-size:56px; } }
+
+    /* particles canvas */
+    #particleCanvas{ position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0.12; }
+
+    /* main container */
+    .wrap{
+      position:relative;
+      z-index:2;
       width:100%; max-width:820px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:18px; padding:28px; border:1px solid var(--card);
-      box-shadow:0 10px 40px rgba(0,0,0,0.6); position:relative; overflow:hidden;
+      margin:10px auto 80px auto;
+      padding:28px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--card-radius);
+      border:1px solid rgba(255,255,255,0.04);
+      padding:28px;
+      box-shadow:0 10px 40px rgba(2,6,23,0.6);
+      backdrop-filter: blur(8px) saturate(1.05);
     }
 
-    /* top note */
-    .note{ color:var(--muted); font-size:14px; letter-spacing:0.8px; text-transform:capitalize; margin-bottom:18px; }
+    .note{ color:var(--muted); font-size:14px; letter-spacing:0.6px; margin-bottom:14px; text-transform:capitalize; }
 
-    /* center column */
-    .center{
-      display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:22px;
-    }
+    .center{ display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:14px; }
 
-    /* avatar */
+    /* avatar circle with glow ring */
     .avatar{
       width:150px; height:150px; border-radius:50%; overflow:hidden; display:grid; place-items:center;
-      border:6px solid rgba(255,255,255,0.06); background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
-      transition:transform .35s ease;
+      border:6px solid rgba(255,255,255,0.035);
+      background: radial-gradient(120% 120% at 10% 10%, rgba(255,209,102,0.04), transparent 24%);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      transition: transform .35s ease;
     }
     .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .avatar:hover{ transform:translateY(-8px) rotate(-2deg); }
+    .avatar:hover{ transform:translateY(-8px) rotate(-2deg) scale(1.02); }
 
-    /* KLASH glitch */
-    .glitch-wrap{ margin-top:6px; text-align:center; }
-    .glitch{
-      font-family:"Playfair Display", serif;
-      font-size:48px; line-height:1; font-weight:900; position:relative; display:inline-block;
-      color:#fff; letter-spacing:1px;
-    }
+    /* glitch name (KLASH) */
+    .glitch{ font-family:"Playfair Display", serif; font-size:56px; font-weight:900; position:relative; line-height:0.9; letter-spacing:1px; display:inline-block; color:#fff; }
     .glitch::before, .glitch::after{
       content:attr(data-text);
       position:absolute; left:0; top:0; width:100%;
-      clip-path:inset(0 0 0 0);
+      pointer-events:none;
     }
-    .glitch::before{ 
-      left:2px; text-shadow:-6px 0 var(--accent1); opacity:.9;
-      animation:glitchTop 2.1s infinite linear;
-    }
-    .glitch::after{
-      left:-2px; text-shadow:-6px 0 var(--accent3); mix-blend-mode:screen;
-      animation:glitchBot 2.9s infinite linear;
-    }
-    @keyframes glitchTop{
-      0%{transform:none; clip-path:inset(0 0 0 0)}
-      10%{clip-path:inset(0 0 40% 0); transform:translate(-4px,-2px)}
-      20%{clip-path:inset(30% 0 10% 0); transform:translate(6px,3px)}
-      30%{clip-path:inset(0 0 0 0); transform:none}
-      100%{clip-path:inset(0 0 0 0)}
-    }
-    @keyframes glitchBot{
-      0%{transform:none; clip-path:inset(0 0 0 0)}
-      15%{clip-path:inset(40% 0 20% 0); transform:translate(4px,3px)}
-      50%{clip-path:inset(0 0 0 0); transform:none}
-      100%{clip-path:inset(0 0 0 0)}
-    }
+    .glitch::before{ left:2px; text-shadow:-6px 0 var(--accent1); animation:gl1 2.2s infinite linear; opacity:0.95; }
+    .glitch::after{ left:-2px; text-shadow:-6px 0 var(--accent3); mix-blend-mode:screen; animation:gl2 2.9s infinite linear; opacity:0.95; }
+    @keyframes gl1{ 0%{clip-path:inset(0 0 0 0)} 10%{clip-path:inset(0 0 40% 0); transform:translate(-3px,-2px)} 20%{clip-path:inset(30% 0 10% 0); transform:translate(6px,3px)} 30%{clip-path:inset(0 0 0 0)} 100%{clip-path:inset(0 0 0 0)} }
+    @keyframes gl2{ 0%{clip-path:inset(0 0 0 0)} 15%{clip-path:inset(40% 0 20% 0); transform:translate(4px,3px)} 50%{clip-path:inset(0 0 0 0)} 100%{clip-path:inset(0 0 0 0)} }
 
-    .subtext{ color:var(--muted); font-size:15px; margin-top:6px; text-align:center; }
+    .subtext{ color:var(--muted); font-size:15px; margin-top:6px; text-align:center; letter-spacing:0.3px; }
 
-    /* Works grid */
-    .works{
-      margin-top:18px;
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:18px;
-    }
-
-    /* base circle */
+    /* unified work-card effect: glass + neon gradient glow + hover pop */
+    .works{ margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:18px; }
     .work{
-      height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-align:center;
-      padding:12px; font-weight:700; font-size:15px; background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.04); transition:transform .35s ease, box-shadow .35s ease;
-      position:relative; overflow:visible;
-      -webkit-backdrop-filter: blur(6px);
+      min-height:110px; border-radius:999px; display:flex; align-items:center; justify-content:center; text-align:center; padding:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.016), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      color:#fff; font-weight:700; font-size:16px;
+      position:relative; overflow:visible; transition: transform .36s cubic-bezier(.2,.9,.2,1), box-shadow .36s ease;
     }
-    .work:active, .work:hover{ transform:translateY(-8px); box-shadow:0 20px 40px rgba(0,0,0,0.6); }
-
-    /* specific effects */
-    /* 1) Meta Ad Expert -> neon ring */
-    .w-neon{
-      color:#fff;
-      box-shadow: 0 10px 30px rgba(255,77,77,0.06);
-    }
-    .w-neon::before{
-      content:""; position:absolute; inset:-8px; border-radius:50%;
+    .work::before{
+      content:""; position:absolute; inset:-10px; border-radius:999px; z-index:-1;
       background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));
-      filter:blur(14px); opacity:0.8; z-index:-1; transform:scale(.98);
-      animation:neonGlow 3s ease-in-out infinite;
+      filter: blur(36px) saturate(1.1); opacity:0.0; transform:scale(.98); transition: opacity .36s ease, transform .36s ease;
     }
-    @keyframes neonGlow{ 0%{opacity:0.6} 50%{opacity:1} 100%{opacity:0.6} }
+    .work:hover{ transform:translateY(-10px) scale(1.01); box-shadow:0 26px 60px rgba(3,8,25,0.7); }
+    .work:hover::before{ opacity:0.95; transform:scale(1.02); }
 
-    /* 2) AI Expert -> liquid metallic text */
-    .w-metal{
-      font-weight:900; background:linear-gradient(90deg,#fff 0%, #ffd166 25%, #ff6e8f 50%, #9be2ff 75%, #fff 100%);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:16px;
-      animation:metalShift 4s linear infinite;
-    }
-    @keyframes metalShift{ 0%{background-position:0%} 50%{background-position:100%} 100%{background-position:0%} }
+    /* small inner highlight gradient text option */
+    .work .highlight{ background:linear-gradient(90deg,#fff 0%, #ffd166 30%, #ff6e8f 55%, #00f0ff 90%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:900; }
 
-    /* 3) Crypto -> sparkles on hover (canvas) */
-    .w-crypto{ position:relative; overflow:visible; }
-    .w-crypto .spark-canvas{ position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:inherit; opacity:0; transition:opacity .25s; }
-    .w-crypto:hover .spark-canvas{ opacity:1; }
-
-    /* 4) Editor -> soft pulse */
-    .w-pulse{ animation:softPulse 2.6s ease-in-out infinite; }
-    @keyframes softPulse{ 0%{transform:scale(1)} 50%{transform:scale(1.03)} 100%{transform:scale(1)} }
-
-    /* 5) Music Producer -> vinyl rotate ring */
-    .w-vinyl::after{
-      content:""; position:absolute; width:56px; height:56px; border-radius:50%; right:10px; bottom:10px;
-      background:conic-gradient(#000 0%, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.03) 60%); border:2px solid rgba(255,255,255,0.03);
-      transform:rotate(0); animation:spin 6s linear infinite; opacity:0.9;
-    }
-    @keyframes spin{ to{ transform:rotate(360deg)} }
-
-    /* 6) Coder -> 3d tilt on mouse */
-    .w-tilt{ transform-style:preserve-3d; transition:transform .2s ease; will-change:transform; }
-
-    /* smaller screens adjustments */
-    @media (max-width:460px){
+    /* small responsive */
+    @media (max-width:540px){
+      .glitch{ font-size:38px; }
       .avatar{ width:120px; height:120px; }
-      .glitch{ font-size:36px; }
-      .work{ height:100px; font-size:14px; }
+      .work{ min-height:96px; font-size:14px; padding:14px; }
     }
 
-    /* ending text */
-    .ending{ margin-top:18px; color:var(--muted); text-align:center; font-weight:700; font-size:16px; }
+    .ending{ margin-top:18px; color:var(--muted); text-align:center; font-weight:700; font-size:15px; line-height:1.4; }
+
+    /* subtle bottom gradient fade so content feels framed */
+    .card::after{
+      content:""; position:absolute; left:0; right:0; bottom:0; height:70px; border-radius:0 0 var(--card-radius) var(--card-radius);
+      background: linear-gradient(180deg, rgba(7,16,34,0) 0%, rgba(2,6,23,0.45) 100%); pointer-events:none;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="note">Waise to no introduction needed Fir bhi bata rha hu</div>
 
-    <div class="center">
-      <!-- avatar: replace src with your image path -->
-      <div class="avatar" id="avatar">
-        <img src="images/profile.jpg" alt="Klash profile">
-      </div>
-
-      <!-- KLASH with glitch -->
-      <div class="glitch-wrap">
-        <div class="glitch" data-text="KLASH">KLASH</div>
-        <div class="subtext">My works</div>
-      </div>
-    </div>
-
-    <!-- works -->
-    <div class="works">
-      <div class="work w-neon">Meta Ad<br>Expert</div>
-
-      <div class="work">
-        <div class="w-metal">AI Expert</div>
-      </div>
-
-      <div class="work w-crypto">
-        Crypto<br>Buyer / Seller
-        <canvas class="spark-canvas" width="300" height="300"></canvas>
-      </div>
-
-      <div class="work w-pulse">Editor</div>
-
-      <div class="work w-vinyl">Music<br>Producer</div>
-
-      <div class="work w-tilt">Chota Mota<br>Coder & Developer</div>
-
-      <div class="work">Aur bhi<br>bahut kuch…</div>
-    </div>
-
-    <div class="ending">Or bhi bahut kuch hai jo yaha bata nahi sakta aao kabhi dm me</div>
+  <!-- background layers -->
+  <div class="bg-wrap" aria-hidden="true">
+    <div class="animated-gradient" style="width:140%; height:140%; left:-20%; top:-20%;"></div>
+    <canvas id="particleCanvas"></canvas>
+    <div class="bg-words"><div class="col">EXPERT &nbsp;&nbsp; CREATOR &nbsp;&nbsp; PRODUCER</div></div>
   </div>
 
+  <main class="wrap">
+    <div class="card">
+      <div class="note">Waise to no introduction needed Fir bhi bata rha hu</div>
+
+      <div class="center">
+        <!-- avatar: uses profile.jpg in repo root -->
+        <div class="avatar" id="avatar">
+          <img src="profile.jpg" alt="Klash profile">
+        </div>
+
+        <!-- KLASH with glitch -->
+        <div style="text-align:center;">
+          <div class="glitch" data-text="KLASH">KLASH</div>
+          <div class="subtext">My works</div>
+        </div>
+      </div>
+
+      <!-- WORKS GRID: all boxes share same premium effect -->
+      <div class="works">
+        <div class="work"><span class="highlight">Meta Ad</span><br>Expert</div>
+        <div class="work"><span class="highlight">AI</span><br>Expert</div>
+        <div class="work">Crypto<br>Buyer / Seller</div>
+        <div class="work">Editor</div>
+        <div class="work">Music<br>Producer</div>
+        <div class="work">Chota Mota<br>Coder & Developer</div>
+        <div class="work">Aur bhi<br>bahut kuch…</div>
+      </div>
+
+      <div class="ending">Or bhi bahut kuch hai jo yaha bata nahi sakta — aao kabhi DM me</div>
+    </div>
+  </main>
+
   <script>
-    /* --- sparkles for crypto (simple particle canvas inside circle) --- */
+    /* PARTICLES: subtle floating dots for premium vibe */
     (function(){
-      const cryptoEl = document.querySelector('.w-crypto');
-      if(!cryptoEl) return;
-      const canvas = cryptoEl.querySelector('.spark-canvas');
+      const canvas = document.getElementById('particleCanvas');
+      if(!canvas) return;
       const ctx = canvas.getContext('2d');
-      function resize(){ const r = cryptoEl.getBoundingClientRect(); canvas.width = r.width; canvas.height = r.height; canvas.style.left = 0; canvas.style.top = 0; }
+      const DPR = Math.min(window.devicePixelRatio || 1, 2);
+      function resize(){ canvas.width = innerWidth * DPR; canvas.height = innerHeight * DPR; canvas.style.width = innerWidth + 'px'; canvas.style.height = innerHeight + 'px'; ctx.setTransform(DPR,0,0,DPR,0,0); }
       addEventListener('resize', resize); resize();
 
-      let sparks = [];
-      function spawn(x,y){
-        sparks.push({x,y, vx:(Math.random()-0.5)*2, vy:(Math.random()-1.5)*2, life:60 + Math.random()*40, r:1+Math.random()*3, hue: Math.random()*60+20});
-        if(sparks.length>120) sparks.shift();
+      const N = Math.round((innerWidth*innerHeight)/90000); // auto scale
+      const pts = [];
+      function rnd(a,b){return a + Math.random()*(b-a);}
+      for(let i=0;i<N;i++){
+        pts.push({ x: rnd(0,innerWidth), y: rnd(0,innerHeight), r: rnd(0.6,2.2), vx: rnd(-0.08,0.08), vy: rnd(-0.02,0.02), alpha: rnd(0.06,0.18) });
       }
-      // spawn some always (idle)
-      setInterval(()=> spawn(Math.random()*canvas.width, Math.random()*canvas.height), 600);
-
-      cryptoEl.addEventListener('mousemove', (e)=>{
-        const rect = cryptoEl.getBoundingClientRect();
-        spawn(e.clientX - rect.left, e.clientY - rect.top);
-      });
 
       function draw(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.globalCompositeOperation = 'lighter';
-        for(let i=sparks.length-1;i>=0;i--){
-          const p = sparks[i];
-          p.life--;
-          if(p.life<=0){ sparks.splice(i,1); continue; }
-          p.x += p.vx; p.y += p.vy; p.vy += 0.02;
-          const a = p.life/100;
-          const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*8);
-          grad.addColorStop(0, `hsla(${p.hue},100%,60%,${a})`);
-          grad.addColorStop(0.5, `hsla(${p.hue+20},100%,45%,${a*0.3})`);
-          grad.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(p.x - p.r*8, p.y - p.r*8, p.r*16, p.r*16);
-        }
+        ctx.globalCompositeOperation = 'source-over';
+        pts.forEach(p=>{
+          p.x += p.vx; p.y += p.vy;
+          if(p.x < -20) p.x = innerWidth + 20;
+          if(p.x > innerWidth + 20) p.x = -20;
+          if(p.y < -20) p.y = innerHeight + 20;
+          if(p.y > innerHeight + 20) p.y = -20;
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(255,255,255,'+p.alpha+')';
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fill();
+        });
         requestAnimationFrame(draw);
       }
       draw();
     })();
 
-    /* --- tilt effect for coder circle --- */
-    (function(){
-      const tilt = document.querySelector('.w-tilt');
-      if(!tilt) return;
-      tilt.addEventListener('mousemove', e=>{
-        const r = tilt.getBoundingClientRect();
-        const x = (e.clientX - r.left)/r.width - 0.5;
-        const y = (e.clientY - r.top)/r.height - 0.5;
-        tilt.style.transform = `perspective(600px) rotateX(${ -y * 10 }deg) rotateY(${ x * 10 }deg) translateZ(6px)`;
-      });
-      tilt.addEventListener('mouseleave', ()=> tilt.style.transform = '');
-    })();
-
-    /* --- avatar parallax tiny movement --- */
+    /* small avatar micro-parallax */
     (function(){
       const av = document.getElementById('avatar');
       if(!av) return;
@@ -261,17 +221,17 @@
         const r = av.getBoundingClientRect();
         const x = (e.clientX - r.left)/r.width - 0.5;
         const y = (e.clientY - r.top)/r.height - 0.5;
-        av.style.transform = `translate3d(${x*6}px,${y*-6}px,0) rotate(${x*-3}deg)`;
+        av.style.transform = `translate3d(${x*8}px,${y*-8}px,0) rotate(${x*-3}deg)`;
       });
       av.addEventListener('mouseleave', ()=> av.style.transform = '');
     })();
 
-    /* optional: reduce animations on mobile to save battery */
+    /* reduce heavy visuals on mobile */
     (function(){
-      const mq = window.matchMedia("(max-width:480px)");
+      const mq = window.matchMedia('(max-width:480px)');
       if(mq.matches){
-        document.querySelectorAll('.w-vinyl').forEach(el=> el.style.animation = 'none');
-        document.querySelectorAll('.glitch::before, .glitch::after').forEach(()=>{}); // keep glitch but subtle
+        document.getElementById('particleCanvas').style.opacity = '0.06';
+        document.querySelectorAll('.glitch').forEach(g=> g.style.opacity = '0.98');
       }
     })();
   </script>
