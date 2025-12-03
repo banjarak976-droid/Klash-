@@ -1,59 +1,144 @@
-/* ====== SCREEN LEFT/RIGHT SHIFT FIX ====== */
+/* ====== RED-BLUE MIX BACKGROUND + WORK BOX PREMIUM EFFECTS ====== */
+/* Paste this inside your existing <style> (end me) */
 
-html, body {
-  overflow-x: hidden !important;
-  min-width: 100%;
+:root{
+  --neon-red: #ff2e63;
+  --neon-blue: #20e3ff;
+  --neon-gold: #ffd166;
+  --bg-deep-1: #040417;
+  --bg-deep-2: #071029;
+  --glass-alpha: 0.03;
 }
 
-.wrap {
-  margin: 12px auto !important;
-  padding-left: 12px !important;
-  padding-right: 12px !important;
-  max-width: 920px !important;
-  box-sizing: border-box;
+/* --- full-screen animated gradient layer (behind content) --- */
+.bg-mix {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(600px 380px at 12% 18%, rgba(255,46,99,0.18), transparent 18%),
+    radial-gradient(700px 420px at 86% 82%, rgba(32,227,255,0.16), transparent 18%),
+    linear-gradient(180deg, var(--bg-deep-1), var(--bg-deep-2));
+  filter: blur(28px) saturate(1.05);
+  transform-origin: center;
+  animation: bgSlowRotate 26s linear infinite;
+  opacity: 0.96;
+}
+@keyframes bgSlowRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(10deg) scale(1.02); }
+  100% { transform: rotate(0deg) scale(1); }
 }
 
-.card {
-  margin: 0 auto !important;
-  max-width: 920px !important;
+/* --- large soft vignette for depth --- */
+.bg-vignette {
+  position: fixed; inset: 0; z-index: 1; pointer-events:none;
+  background: radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 70%);
+  mix-blend-mode: multiply;
 }
 
-/* Background animations ko center lock karna */
-.lens, .animated-gradient, .bg-words, .bg-wrap, #particleCanvas, canvas#p {
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  max-width: 140vw !important;
+/* --- accent moving light sweep (subtle) --- */
+.bg-sweep {
+  position: fixed; left:-30%; top:-30%; width:160%; height:160%; z-index:0; pointer-events:none;
+  background: conic-gradient(from 200deg, rgba(255,46,99,0.06), rgba(255,209,102,0.04), rgba(32,227,255,0.06), transparent 70%);
+  filter: blur(60px) saturate(1.1); opacity:0.55;
+  animation: sweepMove 10s linear infinite;
+}
+@keyframes sweepMove { 0% { transform: translateX(0) rotate(0deg);} 50% { transform: translateX(-4%) rotate(10deg);} 100% { transform: translateX(0) rotate(0deg);} }
+
+/* ===== WORK BOX STYLES (replace .work rules or add) ===== */
+.work {
+  position: relative;
+  z-index: 2; /* above bg layers */
+  background: linear-gradient(180deg, rgba(255,255,255,var(--glass-alpha)), rgba(255,255,255,0.006));
+  border-radius: 999px;
+  padding: 18px 20px;
+  text-align:center;
+  font-weight:800;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.04);
+  overflow: hidden;
+  transition: transform .36s cubic-bezier(.2,.9,.2,1), box-shadow .36s ease;
+  backface-visibility: hidden;
+  will-change: transform;
+  box-shadow: inset 0 3px 18px rgba(255,255,255,0.01);
+}
+
+/* glow ring behind each card (blurred gradient) */
+.work::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 999px;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(255,46,99,0.14), rgba(255,209,102,0.06), rgba(32,227,255,0.14));
+  filter: blur(28px) saturate(1.05);
+  opacity: 0;
+  transform: scale(.98);
+  transition: opacity .36s ease, transform .36s ease;
+  background-size: 200% 100%;
+  animation: glowFlow 7s linear infinite;
+}
+@keyframes glowFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+/* subtle floating motion on some cards */
+.work.floaty { animation: floaty 6s ease-in-out infinite; }
+@keyframes floaty { 0% { transform: translateY(0); } 50% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+
+/* hover: pop + strong neon glow */
+.work:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.6),
+    0 0 40px rgba(255,46,99,0.12),
+    0 0 40px rgba(32,227,255,0.10);
+}
+.work:hover::before { opacity: 1; transform: scale(1.02); }
+
+/* label gradient (pop) */
+.work .label {
+  display:inline-block;
+  font-weight:900;
+  font-size:18px;
+  background: linear-gradient(90deg, var(--neon-red), var(--neon-gold), var(--neon-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: .2px;
+  transition: transform .28s ease;
+}
+
+/* shimmer line across card on hover */
+.work .shimmer {
+  position: absolute;
+  left: -40%; top: 0; width: 20%; height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+  transform: skewX(-18deg);
+  filter: blur(8px);
+  opacity: 0;
+  transition: opacity .35s ease, left .6s ease;
   pointer-events: none;
 }
+.work:hover .shimmer { left: 120%; opacity: .9; transition: left .6s ease, opacity .35s ease; }
 
-/* Ye ensure karega ki BG layers layout ko push na kare */
-.bg-wrap, .animated-gradient, .lens, #particleCanvas, canvas#p {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 0 !important;
+/* small decorative icon/spot (optional) */
+.work .spot {
+  position:absolute; right:14px; bottom:14px; width:46px; height:46px; border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  transform: translateZ(0);
 }
 
-/* Main content hamesha upar rahe */
-.wrap, .card, .avatar, .title, .works {
-  position: relative !important;
-  z-index: 2 !important;
+/* text contrast tweak for inner line */
+.work .sub {
+  display:block; margin-top:6px; color: rgba(255,255,255,0.95); font-weight:800;
 }
 
-/* Mobile optimization */
+/* ===== responsive: reduce heavy blurs on small screens ===== */
 @media (max-width: 560px) {
-  .animated-gradient, .lens {
-    transform: translateX(-50%) scale(0.8) !important;
-    filter: blur(36px) !important;
-    opacity: 0.9 !important;
-  }
-  .bg-words .col {
-    font-size: 44px !important;
-    opacity: 0.03 !important;
-  }
-  .card {
-    padding-left: 18px !important;
-    padding-right: 18px !important;
-  }
+  .bg-glow { filter: blur(36px) !important; opacity: .9; }
+  .bg-sweep { filter: blur(40px) !important; opacity: .45; }
+  .work::before { filter: blur(18px); }
+  .work { padding: 14px; font-size: 15px; }
+  .work .spot { width:36px; height:36px; right:10px; bottom:10px; }
 }
